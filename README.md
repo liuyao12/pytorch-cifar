@@ -26,4 +26,5 @@ e.g. 16×16×3×3 kernel | 16×16 matrix of differential operators
 
 Basically, classical ConvNets (ResNets) are **linear PDEs with constant coefficients**, and here I'm simply making it **variable coefficients**, with the variables being polynomials of degree ≤ 1, which should theoretically enable the neural net to learn more ways to deform than diffusion and translation (e.g., rotation and scaling).
 
-See the code in the [notebook](https://github.com/liuyao12/pytorch-cifar/blob/master/cifar10_with_PDE.ipynb)
+# Implementation in PyTorch
+See the [notebook](https://github.com/liuyao12/pytorch-cifar/blob/master/cifar10_with_PDE.ipynb).
