@@ -19,7 +19,7 @@ output layer | solution at final time
 convolution with 3×3 kernel | differential operator of order ≤ 2
 weights | coefficients
 boundary handling (padding) | boundary condition
-multiple channels | system of (coupled) PDEs
+multiple channels/filters/feature maps | system of (coupled) PDEs
 e.g. 16×16×3×3 kernel | 16×16 matrix of differential operators
 16×16×1×1 kernel | 16×16 matrix of constants
 
