@@ -28,3 +28,6 @@ Basically, classical ConvNets (ResNets) are **linear PDEs with constant coeffici
 
 # Implementation in PyTorch
 See the [notebook](https://github.com/liuyao12/pytorch-cifar/blob/master/cifar10_with_PDE.ipynb).
+
+* 94.32% ResNet34 with twist, in 50 epochs
+* 94.72% ResNet50 with twist, in 120 epochs
