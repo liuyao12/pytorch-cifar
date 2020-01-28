@@ -22,7 +22,7 @@ boundary handling (padding) | boundary condition
 multiple channels/filters/feature_maps | system of (coupled) PDEs
 e.g. 16×16×3×3 kernel | 16×16 matrix of differential operators
 16×16×1×1 kernel | 16×16 matrix of constants
-groups > 1 | block diagonal matrix
+groups>1 (in Conv2d) | matrix is block diagonal (direct sum of submatrices)
 
 
 Basically, classical ConvNets (ResNets) are **linear PDEs with constant coefficients**, and here I'm simply making it **variable coefficients**, with the variables being polynomials of degree ≤ 1, which should theoretically enable the neural net to learn more ways to deform than diffusion and translation (e.g., rotation and scaling).
