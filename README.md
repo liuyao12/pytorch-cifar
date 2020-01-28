@@ -10,7 +10,7 @@
 
 A quick summary of ConvNets from a Partial Differential Equations (PDE) point of view. For details, see my [notebook](https://observablehq.com/@liuyao12/neural-networks-and-partial-differential-equations) on observable.
 
-neural network | heat equation
+neural network | "heat" equation
 :----:|:-------:
 input layer | initial condition
 feed forward | solving the equation
@@ -19,9 +19,10 @@ output layer | solution at final time
 convolution with 3×3 kernel | differential operator of order ≤ 2
 weights | coefficients
 boundary handling (padding) | boundary condition
-multiple channels/filters/feature maps | system of (coupled) PDEs
+multiple channels/filters/feature_maps | system of (coupled) PDEs
 e.g. 16×16×3×3 kernel | 16×16 matrix of differential operators
 16×16×1×1 kernel | 16×16 matrix of constants
+groups > 1 | block diagonal matrix
 
 
 Basically, classical ConvNets (ResNets) are **linear PDEs with constant coefficients**, and here I'm simply making it **variable coefficients**, with the variables being polynomials of degree ≤ 1, which should theoretically enable the neural net to learn more ways to deform than diffusion and translation (e.g., rotation and scaling).
