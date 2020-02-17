@@ -82,29 +82,31 @@ class TwistLayer(Module):
         self.XX, self.YY = None, None
         self.disk = None
         self.radii = torch.nn.Parameter(torch.ones(nf), requires_grad=True)
-        self.radii.data.uniform_(0.3, 0.8)
         # self.radius = np.ones(nf) * 0.7
         self.conv = conv(ni, nf, stride=stride)
         self.convx = conv(ni, nf, stride=stride)
         self.convy = conv(ni, nf, stride=stride)
 
     def forward(self, x):
-        self.convx.weight.data = (self.convx.weight - self.convx.weight.flip(2).flip(3)) / 2
-        # self.convy.weight.data = (self.convy.weight - self.convy.weight.flip(2).flip(3)) / 2
+        self.convx.weight.data = (self.convx.weight-self.convx.weight.flip(2).flip(3))/2
+        # self.convy.weight.data = (self.convy.weight-self.convy.weight.flip(2).flip(3))/2
         self.convy.weight.data = self.convx.weight.transpose(2,3).flip(2)
         x1 = self.conv(x)
-        _, c, h, w = x1.size()
+        _,c,h,w = x1.size()
         if self.XX is None:
-            XX = np.indices((1,h,w))[2]/w-0.5
-            YY = np.indices((1,h,w))[1]/h-0.5
+            self.radii.data.uniform_(0.3, 0.7)
+            XX = np.indices((1,h,w))[2]*2/w-1
+            YY = np.indices((1,h,w))[1]*2/h-1
             self.XX = torch.from_numpy(XX).type(x.dtype).to(x.device)
             self.YY = torch.from_numpy(YY).type(x.dtype).to(x.device)
-            self.disk = torch.where(self.XX**2+self.YY**2<=self.radii.type(x.dtype).to(x.device).view(-1,1,1)**2, 
-                                    torch.Tensor([1.]).type(x.dtype).to(x.device), 
-                                    torch.Tensor([0.]).type(x.dtype).to(x.device))
-        if c == 64:
-            # print(self.disk.shape, self.disk.sum()/(c*h*w), self.radii.mean().item())
-            print(self.radii)
+        self.disk = torch.where(self.XX**2+self.YY**2<=(self.radii**2).type(x.dtype).to(x.device).view(-1,1,1), 
+                                torch.Tensor([1.]).type(x.dtype).to(x.device), 
+                                torch.Tensor([0.]).type(x.dtype).to(x.device))
+        # if c == 64:
+        # #    print(self.convx.weight.shape, self.convx.weight[0,0,0,1].item())
+        # # #     print(self.radii[0])
+        # #     # print(self.XX.shape, self.YY.shape, self.disk.shape)
+        #     print(self.disk.shape, self.disk[0].sum().item(), self.radii.mean().item())
         return x1 + self.disk * (self.XX * self.convx(x) + self.YY * self.convy(x))
 
     
@@ -130,7 +132,7 @@ def noop(x): return x
 def conv_layer(ni, nf, ks=3, stride=1, zero_bn=False, act=True):
     bn = nn.BatchNorm2d(nf)
     nn.init.constant_(bn.weight, 0. if zero_bn else 1.)
-    layers = [conv(ni, nf, ks, stride=stride), bn] if ks==1 else [TwistLayer(ni, nf, stride=stride), bn]
+    layers = [conv(ni, nf, ks, stride=stride), bn] # if ks==1 or nf<=32 else [TwistLayer(ni, nf, stride=stride), bn]
     if act: layers.append(act_fn)
     return nn.Sequential(*layers)
 

@@ -131,6 +131,10 @@ def train(
     if gpu is None:       learn.to_parallel()
     elif num_distrib()>1: learn.to_distributed(gpu) # Requires `-m fastai.launch`
     
+    for name, param in learn.model.named_parameters():
+        if "radii" in name:
+            print(name, param.mean().item())
+
     if lrfinder:
         # run learning rate finder
         IN_NOTEBOOK = 1
@@ -142,6 +146,10 @@ def train(
         elif sched_type == 'flat_and_anneal': 
             fit_with_annealing(learn, epochs, lr, ann_start)
     
+    for name, param in learn.model.named_parameters():
+        if "radii" in name:
+            print(name, param.mean().item())
+
     return learn.recorder.metrics[-1][0]
 
 @call_parse
